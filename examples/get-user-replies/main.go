@@ -15,7 +15,7 @@ func main() {
 		return
 	}
 
-	post, err := t.GetPost(3141055616164096839)
+	post, err := t.GetUserReplies(314216)
 	if err != nil {
 		fmt.Println("Error:", err)
 
