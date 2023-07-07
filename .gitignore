@@ -1,0 +1,14 @@
+# Golang
+.idea
+
+# Emacs
+*~
+
+# VIM
+*.swp
+
+#IntelliJ
+*.iml
+
+# govendor
+/vendor/*/
