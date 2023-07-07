@@ -27,9 +27,14 @@ type RequestData struct {
 }
 
 // NewThreads constructs a Threads instance.
-func NewThreads() *Threads {
-	t := new(Threads)
-	t.token = t.GetToken()
+func NewThreads() (t *Threads, err error) {
+	t = new(Threads)
+
+	t.token, err = t.GetToken()
+	if err != nil {
+		return nil, err
+	}
+
 	t.headers = map[string][]string{
 		"Content-Type":   {"application/x-www-form-urlencoded"},
 		"X-IG-App-ID":    {"238260118697367"},
@@ -37,23 +42,35 @@ func NewThreads() *Threads {
 		"Sec-Fetch-Site": {"same-origin"},
 	}
 
-	return t
+	return t, nil
 }
 
 // GetToken fetches a token.
-func (t *Threads) GetToken() string {
-	resp, _ := http.Get(tokenUrl)
-	body, _ := io.ReadAll(resp.Body)
+func (t *Threads) GetToken() (string, error) {
+	resp, err := http.Get(tokenUrl)
+	if err != nil {
+		return "", err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
 	bodyStr := string(body)
 
 	tokenKeyPos := strings.Index(bodyStr, "\"token\"")
 	token := bodyStr[tokenKeyPos+9 : tokenKeyPos+31]
 
-	return token
+	return token, nil
 }
 
 func (t *Threads) postRequest(variables map[string]int, docID string) ([]byte, error) {
-	variablesStr, _ := json.Marshal(variables)
+	variablesStr, err := json.Marshal(variables)
+	if err != nil {
+		return nil, err
+	}
+
 	data := RequestData{
 		Lsd:       t.token,
 		Variables: string(variablesStr),
