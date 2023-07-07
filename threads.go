@@ -82,7 +82,15 @@ func (t *Threads) postRequest(variables map[string]int, docID string) ([]byte, e
 		return nil, err
 	}
 
-	resp, err := http.Post(apiUrl, "application/json", bytes.NewBuffer(dataStr))
+	req, err := http.NewRequest(http.MethodPost, apiUrl, bytes.NewBuffer(dataStr))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header = t.headers
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
