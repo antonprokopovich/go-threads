@@ -36,6 +36,7 @@ func NewThreads() (t *Threads, err error) {
 	}
 
 	t.headers = map[string][]string{
+		"User-Agent":     {"go"},
 		"Content-Type":   {"application/x-www-form-urlencoded"},
 		"X-IG-App-ID":    {"238260118697367"},
 		"X-FB-LSD":       {t.token},
