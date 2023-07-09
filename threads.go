@@ -148,7 +148,7 @@ func (t *Threads) postRequest(variables map[string]int, docID string, headers ht
 func (t *Threads) GetPost(id int) ([]byte, error) {
 	variables := map[string]int{"postID": id}
 
-	headers := t.defaultHeaders
+	headers := t.defaultHeaders.Clone()
 	headers.Add("X-FB-Friendly-Name", "BarcelonaPostPageQuery")
 
 	return t.postRequest(variables, getPostDocID, headers)
@@ -165,7 +165,7 @@ func (t *Threads) GetPostLikers(id int) ([]byte, error) {
 func (t *Threads) GetUser(id int) ([]byte, error) {
 	variables := map[string]int{"userID": id}
 
-	headers := t.defaultHeaders
+	headers := t.defaultHeaders.Clone()
 	headers.Add("X-FB-Friendly-Name", "BarcelonaProfileRootQuery")
 
 	return t.postRequest(variables, getUserDocID, headers)
@@ -175,7 +175,7 @@ func (t *Threads) GetUser(id int) ([]byte, error) {
 func (t *Threads) GetUserThreads(id int) ([]byte, error) {
 	variables := map[string]int{"userID": id}
 
-	headers := t.defaultHeaders
+	headers := t.defaultHeaders.Clone()
 	headers.Add("X-FB-Friendly-Name", "BarcelonaProfileThreadsTabQuery")
 
 	return t.postRequest(variables, getUserThreadsDocID, headers)
@@ -185,7 +185,7 @@ func (t *Threads) GetUserThreads(id int) ([]byte, error) {
 func (t *Threads) GetUserReplies(id int) ([]byte, error) {
 	variables := map[string]int{"userID": id}
 
-	headers := t.defaultHeaders
+	headers := t.defaultHeaders.Clone()
 	headers.Add("X-FB-Friendly-Name", "BarcelonaProfileRepliesTabQuery")
 
 	return t.postRequest(variables, getUserRepliesDocID, headers)
@@ -200,7 +200,7 @@ func (t *Threads) GetUserID(username string) (int, error) {
 		return -1, err
 	}
 
-	req.Header = t.defaultHeaders
+	req.Header = t.defaultHeaders.Clone()
 
 	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
 	req.Header.Add("Referer", url)
