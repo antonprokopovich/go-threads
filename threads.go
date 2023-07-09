@@ -3,20 +3,33 @@ package threads
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/pkg/errors"
+	"strconv"
+
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
 )
 
 const (
-	apiUrl   = "https://www.threads.net/api/graphql"
-	tokenUrl = "https://www.threads.net/@instagram"
+	getUserDocID        = "23996318473300828"
+	getUserThreadsDocID = "6232751443445612"
+	getUserRepliesDocID = "6307072669391286"
+	getPostDocID        = "5587632691339264"
+	getPostLikersDocID  = "9360915773983802"
+)
+
+const (
+	maxRedirectsNum = 20
+	apiUrl          = "https://www.threads.net/api/graphql"
+	tokenUrl        = "https://www.threads.net/@instagram"
 )
 
 // Threads implements Threads.net API wrapper.
 type Threads struct {
-	token   string
-	headers http.Header
+	token          string
+	defaultHeaders http.Header
 }
 
 // RequestData stores the request payload.
@@ -30,32 +43,59 @@ type RequestData struct {
 func NewThreads() (t *Threads, err error) {
 	t = new(Threads)
 
-	t.token, err = t.GetToken()
+	t.token, err = t.getToken()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get token")
 	}
 
-	t.headers = map[string][]string{
-		"User-Agent":     {"go"},
-		"Content-Type":   {"application/x-www-form-urlencoded"},
-		"X-IG-App-ID":    {"238260118697367"},
-		"X-FB-LSD":       {t.token},
-		"Sec-Fetch-Site": {"same-origin"},
+	t.defaultHeaders = map[string][]string{
+		"Authority":       {"www.threads.net"},
+		"Accept":          {"*/*"},
+		"Accept-Language": {"en-US,en;q=0.9"},
+		"Cache-Control":   {"no-cache"},
+		"Content-Type":    {"application/x-www-form-urlencoded"},
+		"Origin":          {"https://www.threads.net"},
+		"Pragma":          {"no-cache"},
+		"Sec-Fetch-Site":  {"same-origin"},
+		"User-Agent":      {"golang"},
+		"X-IG-App-ID":     {"238260118697367"},
+		"X-FB-LSD":        {t.token},
 	}
 
 	return t, nil
 }
 
-// GetToken fetches a token.
-func (t *Threads) GetToken() (string, error) {
-	resp, err := http.Get(tokenUrl)
+func (t *Threads) getToken() (string, error) {
+	req, err := http.NewRequest(http.MethodGet, tokenUrl, nil)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "http.NewRequest")
+	}
+
+	req.Header = map[string][]string{
+		"User-Agent": {"golang"},
+	}
+
+	client := &http.Client{
+		CheckRedirect: func() func(req *http.Request, via []*http.Request) error {
+			redirects := 0
+			return func(req *http.Request, via []*http.Request) error {
+				if redirects > maxRedirectsNum {
+					return errors.New(fmt.Sprintf("stopped after %d redirects", maxRedirectsNum))
+				}
+				redirects++
+
+				return nil
+			}
+		}(),
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", errors.Wrap(err, "http Get request failed")
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to read response body")
 	}
 
 	bodyStr := string(body)
@@ -66,7 +106,7 @@ func (t *Threads) GetToken() (string, error) {
 	return token, nil
 }
 
-func (t *Threads) postRequest(variables map[string]int, docID string) ([]byte, error) {
+func (t *Threads) postRequest(variables map[string]int, docID string, headers http.Header) ([]byte, error) {
 	variablesStr, err := json.Marshal(variables)
 	if err != nil {
 		return nil, err
@@ -88,7 +128,7 @@ func (t *Threads) postRequest(variables map[string]int, docID string) ([]byte, e
 		return nil, err
 	}
 
-	req.Header = t.headers
+	req.Header = headers
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -107,23 +147,93 @@ func (t *Threads) postRequest(variables map[string]int, docID string) ([]byte, e
 // GetPost fetches a post.
 func (t *Threads) GetPost(id int) ([]byte, error) {
 	variables := map[string]int{"postID": id}
-	return t.postRequest(variables, "5587632691339264")
+
+	headers := t.defaultHeaders
+	headers.Add("X-FB-Friendly-Name", "BarcelonaPostPageQuery")
+
+	return t.postRequest(variables, getPostDocID, headers)
+}
+
+// GetPostLikers fetches all users who like the post.
+func (t *Threads) GetPostLikers(id int) ([]byte, error) {
+	variables := map[string]int{"postID": id}
+
+	return t.postRequest(variables, getPostLikersDocID, t.defaultHeaders)
 }
 
 // GetUser fetches a user.
 func (t *Threads) GetUser(id int) ([]byte, error) {
 	variables := map[string]int{"userID": id}
-	return t.postRequest(variables, "23996318473300828")
+
+	headers := t.defaultHeaders
+	headers.Add("X-FB-Friendly-Name", "BarcelonaProfileRootQuery")
+
+	return t.postRequest(variables, getUserDocID, headers)
 }
 
 // GetUserThreads fetches a user's Threads.
 func (t *Threads) GetUserThreads(id int) ([]byte, error) {
 	variables := map[string]int{"userID": id}
-	return t.postRequest(variables, "6232751443445612")
+
+	headers := t.defaultHeaders
+	headers.Add("X-FB-Friendly-Name", "BarcelonaProfileThreadsTabQuery")
+
+	return t.postRequest(variables, getUserThreadsDocID, headers)
 }
 
 // GetUserReplies fetches a user's replies.
 func (t *Threads) GetUserReplies(id int) ([]byte, error) {
 	variables := map[string]int{"userID": id}
-	return t.postRequest(variables, "6307072669391286")
+
+	headers := t.defaultHeaders
+	headers.Add("X-FB-Friendly-Name", "BarcelonaProfileRepliesTabQuery")
+
+	return t.postRequest(variables, getUserRepliesDocID, headers)
+}
+
+// GetUserID fetches user's ID by username.
+func (t *Threads) GetUserID(username string) (int, error) {
+	url := fmt.Sprintf("https://www.threads.net/@%s", username)
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return -1, err
+	}
+
+	req.Header = t.defaultHeaders
+
+	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+	req.Header.Add("Referer", url)
+	req.Header.Add("Sec-Fetch-Dest", "document")
+	req.Header.Add("Sec-Fetch-Mode", "navigate")
+	req.Header.Add("Sec-Fetch-Site", "cross-site")
+	req.Header.Add("Sec-Fetch-User", "?1")
+	req.Header.Add("Upgrade-Insecure-Requests", "1")
+
+	req.Header.Del("X-ASBD-ID")
+	req.Header.Del("X-FB-LSD")
+	req.Header.Del("X-IG-App-ID")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return -1, err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return -1, err
+	}
+
+	bodyStr := string(body)
+
+	userKeyPos := strings.Index(bodyStr, "\"user_id\"")
+	userIdStr := bodyStr[userKeyPos+11 : userKeyPos+17]
+
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		return -1, err
+	}
+
+	return userId, nil
 }

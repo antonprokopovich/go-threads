@@ -15,18 +15,25 @@ func main() {
 		return
 	}
 
-	post, err := t.GetUser(314216)
+	userID, err := t.GetUserID("zuck")
 	if err != nil {
 		fmt.Println("Error:", err)
 
 		return
 	}
 
-	postJson, err := json.MarshalIndent(post, "", "  ")
+	user, err := t.GetUser(userID)
 	if err != nil {
 		fmt.Println("Error:", err)
 
 		return
 	}
-	fmt.Println(string(postJson))
+
+	userBytes, err := json.MarshalIndent(user, "", "  ")
+	if err != nil {
+		fmt.Println("Error:", err)
+
+		return
+	}
+	fmt.Println(string(userBytes))
 }
