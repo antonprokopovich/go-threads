@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/antonprokopovich/threadsnet"
 )
@@ -15,18 +17,17 @@ func main() {
 		return
 	}
 
-	post, err := t.GetPost(3141055616164096839)
+	post, err := t.GetPost(3141002295235099165)
 	if err != nil {
 		fmt.Println("Error:", err)
 
 		return
 	}
 
-	postJson, err := json.MarshalIndent(post, "", "  ")
-	if err != nil {
-		fmt.Println("Error:", err)
-
-		return
+	var postPretty bytes.Buffer
+	if err = json.Indent(&postPretty, post, "", "\t"); err != nil {
+		log.Fatal("JSON parse error: ", err)
 	}
-	fmt.Println(string(postJson))
+
+	fmt.Println(postPretty.String())
 }
