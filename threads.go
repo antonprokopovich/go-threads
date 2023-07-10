@@ -1,12 +1,13 @@
 package threads
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/pkg/errors"
+	"net/url"
 	"strconv"
 
 	"fmt"
+	insta "github.com/Davincible/goinsta/v3"
 	"io"
 	"net/http"
 	"strings"
@@ -28,6 +29,7 @@ const (
 
 // Threads implements Threads.net API wrapper.
 type Threads struct {
+	*insta.Instagram
 	token          string
 	defaultHeaders http.Header
 }
@@ -53,13 +55,16 @@ func NewThreads() (t *Threads, err error) {
 		"Accept":          {"*/*"},
 		"Accept-Language": {"en-US,en;q=0.9"},
 		"Cache-Control":   {"no-cache"},
-		"Content-Type":    {"application/x-www-form-urlencoded"},
-		"Origin":          {"https://www.threads.net"},
-		"Pragma":          {"no-cache"},
-		"Sec-Fetch-Site":  {"same-origin"},
-		"User-Agent":      {"golang"},
-		"X-IG-App-ID":     {"238260118697367"},
-		"X-FB-LSD":        {t.token},
+		//"Content-Type":    {"application/json"},
+		"Content-Type":   {"application/x-www-form-urlencoded"},
+		"Connection":     {"keep-alive"},
+		"Origin":         {"https://www.threads.net"},
+		"Pragma":         {"no-cache"},
+		"Sec-Fetch-Site": {"same-origin"},
+		"User-Agent":     {"golang"},
+		"X-ASBD-ID":      {"129477"},
+		"X-IG-App-ID":    {"238260118697367"},
+		"X-FB-LSD":       {t.token},
 	}
 
 	return t, nil
@@ -112,18 +117,12 @@ func (t *Threads) postRequest(variables map[string]int, docID string, headers ht
 		return nil, err
 	}
 
-	data := RequestData{
-		Lsd:       t.token,
-		Variables: string(variablesStr),
-		DocID:     docID,
-	}
+	data := url.Values{}
+	data.Set("lsd", t.token)
+	data.Set("variables", string(variablesStr))
+	data.Set("doc_id", docID)
 
-	dataStr, err := json.Marshal(data)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest(http.MethodPost, apiUrl, bytes.NewBuffer(dataStr))
+	req, err := http.NewRequest(http.MethodPost, apiUrl, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -193,9 +192,9 @@ func (t *Threads) GetUserReplies(id int) ([]byte, error) {
 
 // GetUserID fetches user's ID by username.
 func (t *Threads) GetUserID(username string) (int, error) {
-	url := fmt.Sprintf("https://www.threads.net/@%s", username)
+	baseURL := fmt.Sprintf("https://www.threads.net/@%s", username)
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {
 		return -1, err
 	}
@@ -203,7 +202,7 @@ func (t *Threads) GetUserID(username string) (int, error) {
 	req.Header = t.defaultHeaders.Clone()
 
 	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
-	req.Header.Add("Referer", url)
+	req.Header.Add("Referer", baseURL)
 	req.Header.Add("Sec-Fetch-Dest", "document")
 	req.Header.Add("Sec-Fetch-Mode", "navigate")
 	req.Header.Add("Sec-Fetch-Site", "cross-site")

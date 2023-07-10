@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/antonprokopovich/threadsnet"
 )
@@ -29,11 +31,10 @@ func main() {
 		return
 	}
 
-	userBytes, err := json.MarshalIndent(user, "", "  ")
-	if err != nil {
-		fmt.Println("Error:", err)
-
-		return
+	var userPretty bytes.Buffer
+	if err = json.Indent(&userPretty, user, "", "\t"); err != nil {
+		log.Fatal("JSON parse error: ", err)
 	}
-	fmt.Println(string(userBytes))
+
+	fmt.Println(userPretty.String())
 }
