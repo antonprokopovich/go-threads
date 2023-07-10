@@ -1,4 +1,13 @@
+<div align="center">
 Threads (threads.net) Go API wrapper
+<p align="center">
+  <a href="#installation">Installation</a> •
+  <a href="#initialization">Initialization</a> •
+  <a href="#examples">Examples</a> •
+  <a href="#other-languages">Other languages</a>
+</p>
+
+</div>
 
 ### Installation
 
@@ -22,3 +31,13 @@ if err != nil {
 
 ### Examples
 See [/examples](./examples) folder for a runnable example of every available API method.
+
+### Other languages
+
+Threads.net API implementations in other languages:
+
+JavaScript: 
+- https://github.com/threadsjs/threads.js
+
+Python:
+- https://github.com/dmytrostriletskyi/threads-net
