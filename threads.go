@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"fmt"
-	insta "github.com/Davincible/goinsta/v3"
 	"io"
 	"net/http"
 	"strings"
@@ -29,7 +28,6 @@ const (
 
 // Threads implements Threads.net API wrapper.
 type Threads struct {
-	*insta.Instagram
 	token          string
 	defaultHeaders http.Header
 }
@@ -55,16 +53,15 @@ func NewThreads() (t *Threads, err error) {
 		"Accept":          {"*/*"},
 		"Accept-Language": {"en-US,en;q=0.9"},
 		"Cache-Control":   {"no-cache"},
-		//"Content-Type":    {"application/json"},
-		"Content-Type":   {"application/x-www-form-urlencoded"},
-		"Connection":     {"keep-alive"},
-		"Origin":         {"https://www.threads.net"},
-		"Pragma":         {"no-cache"},
-		"Sec-Fetch-Site": {"same-origin"},
-		"User-Agent":     {"golang"},
-		"X-ASBD-ID":      {"129477"},
-		"X-IG-App-ID":    {"238260118697367"},
-		"X-FB-LSD":       {t.token},
+		"Content-Type":    {"application/x-www-form-urlencoded"},
+		"Connection":      {"keep-alive"},
+		"Origin":          {"https://www.threads.net"},
+		"Pragma":          {"no-cache"},
+		"Sec-Fetch-Site":  {"same-origin"},
+		"User-Agent":      {"golang"},
+		"X-ASBD-ID":       {"129477"},
+		"X-IG-App-ID":     {"238260118697367"},
+		"X-FB-LSD":        {t.token},
 	}
 
 	return t, nil
