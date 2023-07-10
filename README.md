@@ -20,5 +20,5 @@ if err != nil {
 }
 ```
 
-### Initialization
+### Examples
 See [/examples](./examples) folder for a runnable example of every available API method.
