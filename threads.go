@@ -2,9 +2,11 @@ package threads
 
 import (
 	"encoding/json"
-	"github.com/pkg/errors"
 	"net/url"
+	"regexp"
 	"strconv"
+
+	"github.com/pkg/errors"
 
 	"fmt"
 	"io"
@@ -221,10 +223,8 @@ func (t *Threads) GetUserID(username string) (int, error) {
 		return -1, err
 	}
 
-	bodyStr := string(body)
-
-	userKeyPos := strings.Index(bodyStr, "\"user_id\"")
-	userIdStr := bodyStr[userKeyPos+11 : userKeyPos+17]
+	userIdRegex := regexp.MustCompile(`"user_id":"(\d+)"`)
+	userIdStr := userIdRegex.FindStringSubmatch(string(body))[1]
 
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
