@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
-	"github.com/antonprokopovich/threadsnet"
 )
 
 func main() {

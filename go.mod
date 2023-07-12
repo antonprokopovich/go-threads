@@ -1,4 +1,4 @@
-module github.com/antonprokopovich/threadsnet
+module github.com/antonprokopovich/go-threads
 
 go 1.20
 

@@ -1,10 +1,13 @@
 <div align="center">
+
+# threadsnet
+
 Threads (threads.net) Go API wrapper
 <p align="center">
   <a href="#installation">Installation</a> •
   <a href="#initialization">Initialization</a> •
-  <a href="#examples">Examples</a> •
-  <a href="#other-languages">Other languages</a>
+  <a href="#api">API</a> •
+  <a href="#run-examples">Run Examples</a>
 </p>
 
 </div>
@@ -12,14 +15,14 @@ Threads (threads.net) Go API wrapper
 ## Installation
 
 ```bash
-$ go get github.com/antonprokopovich/threadsnet
+$ go get github.com/antonprokopovich/go-threads
 ```
 ## Initialization
 
 Initialize the instance of `Threads` type to use its public methods that correspond to Threads API endpoints:
 ```go
 import (
-    "github.com/antonprokopovich/threadsnet"
+    "github.com/antonprokopovich/go-threads"
 )
 
 
