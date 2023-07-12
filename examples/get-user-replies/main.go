@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/antonprokopovich/threadsnet"
+	"github.com/antonprokopovich/go-threads"
 )
 
 func main() {
