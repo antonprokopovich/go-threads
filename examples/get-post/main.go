@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	"github.com/antonprokopovich/go-threads"
 )
 
 func main() {
