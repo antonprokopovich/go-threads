@@ -1,6 +1,6 @@
 <div align="center">
 
-# threadsnet
+# go-threads
 
 Threads (threads.net) Go API wrapper
 <p align="center">
