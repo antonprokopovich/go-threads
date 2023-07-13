@@ -538,5 +538,41 @@ post, err := threads.GetPost(3141002295235099165)
   ```
 </details>
 
+#### Get Post likers.
+Pass a post's ID number as an argument.
+```go
+likers, err := threads.GetPostLikers(3141002295235099165)
+```
+
+<details>
+  <summary>Open response example</summary>
+
+  ```json
+  {
+  "data": {
+    "likers": {
+      "users": [
+        {
+          "pk": "32729880576",
+          "full_name": "K 🦋I🦋K🦋I",
+          "profile_pic_url": "https://scontent.cdninstagram.com/19/6007.jpg
+          "follower_count": 51,
+          "is_verified": false,
+          "username": "niyod_couture",
+          "profile_context_facepile_users": null,
+          "id": null
+        },
+        ...
+      ]
+    }
+  },
+  "extensions": {
+    "is_final": true
+  }
+}
+  ```
+</details>
+
+
 ## Run examples
 See [/examples](./examples) folder for a runnable example of every available API method.
