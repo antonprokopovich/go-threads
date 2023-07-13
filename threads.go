@@ -34,13 +34,6 @@ type Threads struct {
 	defaultHeaders http.Header
 }
 
-// RequestData stores the request payload.
-type RequestData struct {
-	Lsd       string `json:"lsd"`
-	Variables string `json:"variables"`
-	DocID     string `json:"doc_id"`
-}
-
 // NewThreads constructs a Threads instance.
 func NewThreads() (t *Threads, err error) {
 	t = new(Threads)
@@ -152,9 +145,9 @@ func (t *Threads) GetPost(id int) ([]byte, error) {
 	return t.postRequest(variables, getPostDocID, headers)
 }
 
-// GetPostLikers fetches all users who like the post.
+// GetPostLikers fetches all users who liked the post.
 func (t *Threads) GetPostLikers(id int) ([]byte, error) {
-	variables := map[string]int{"postID": id}
+	variables := map[string]int{"mediaID": id}
 
 	return t.postRequest(variables, getPostLikersDocID, t.defaultHeaders)
 }

@@ -12,21 +12,17 @@ import (
 func main() {
 	t, err := threads.NewThreads()
 	if err != nil {
-		fmt.Println("Error:", err)
-
-		return
+		log.Fatal("NewThreads: ", err)
 	}
 
-	likers, err := t.GetPostLikers(3141002295235099165)
+	likers, err := t.GetPostLikers(3141055616164096839)
 	if err != nil {
-		fmt.Println("Error:", err)
-
-		return
+		log.Fatal("GetPostLikers: ", err)
 	}
 
 	var likersPretty bytes.Buffer
 	if err = json.Indent(&likersPretty, likers, "", "\t"); err != nil {
-		log.Fatal("JSON parse error: ", err)
+		log.Fatal("json.Indent: ", err)
 	}
 
 	fmt.Println(likersPretty.String())
