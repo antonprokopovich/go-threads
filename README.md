@@ -3,6 +3,11 @@
 # go-threads
 
 Threads (threads.net) Go API wrapper
+
+![Go](https://img.shields.io/badge/Go-1.20-blue)
+![Release](https://img.shields.io/github/v/release/antonprokopovich/go-threads)
+![License](https://img.shields.io/github/license/antonprokopovich/go-threads)
+
 <p align="center">
   <a href="#installation">Installation</a> •
   <a href="#initialization">Initialization</a> •
