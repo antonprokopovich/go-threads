@@ -1,6 +1,7 @@
 <div align="center">
 
 # go-threads
+<img src="go-threads-logo.png" width="200" height="200" />
 
 Threads (threads.net) Go API wrapper
 
