@@ -24,8 +24,8 @@ const (
 
 const (
 	maxRedirectsNum = 20
-	apiUrl          = "https://www.threads.net/api/graphql"
-	tokenUrl        = "https://www.threads.net/@instagram"
+	apiURL          = "https://www.threads.net/api/graphql"
+	tokenURL        = "https://www.threads.net/@instagram"
 )
 
 // Threads implements Threads.net API wrapper.
@@ -63,7 +63,7 @@ func NewThreads() (t *Threads, err error) {
 }
 
 func (t *Threads) getToken() (string, error) {
-	req, err := http.NewRequest(http.MethodGet, tokenUrl, nil)
+	req, err := http.NewRequest(http.MethodGet, tokenURL, nil)
 	if err != nil {
 		return "", errors.Wrap(err, "http.NewRequest")
 	}
@@ -114,7 +114,7 @@ func (t *Threads) postRequest(variables map[string]int, docID string, headers ht
 	data.Set("variables", string(variablesStr))
 	data.Set("doc_id", docID)
 
-	req, err := http.NewRequest(http.MethodPost, apiUrl, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, apiURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, err
 	}
