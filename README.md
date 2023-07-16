@@ -5,7 +5,9 @@
 
 Threads (threads.net) Go API wrapper
 
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/antonprokopovich/go-threads/.github%2Fworkflows%2F.audit.yaml)
 ![Go](https://img.shields.io/badge/Go-1.20-blue)
+[![Go Report Card](https://goreportcard.com/badge/github.com/antonprokopovich/go-threads)](https://goreportcard.com/report/github.com/antonprokopovich/go-threads)
 ![Release](https://img.shields.io/github/v/release/antonprokopovich/go-threads)
 ![License](https://img.shields.io/github/license/antonprokopovich/go-threads)
 
