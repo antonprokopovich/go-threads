@@ -10,6 +10,7 @@ Threads (threads.net) Go API wrapper
 [![Go Report Card](https://goreportcard.com/badge/github.com/antonprokopovich/go-threads)](https://goreportcard.com/report/github.com/antonprokopovich/go-threads)
 ![Release](https://img.shields.io/github/v/release/antonprokopovich/go-threads)
 ![License](https://img.shields.io/github/license/antonprokopovich/go-threads)
+[![GoDoc](https://godoc.org/github.com/antonprokopovich/go-threads?status.svg)](https://godoc.org/github.com/antonprokopovich/go-threads)
 
 <p align="center">
   <a href="#installation">Installation</a> •
