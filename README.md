@@ -13,6 +13,7 @@ Threads (threads.net) Go API wrapper
 [![GoDoc](https://godoc.org/github.com/antonprokopovich/go-threads?status.svg)](https://godoc.org/github.com/antonprokopovich/go-threads)
 
 <p align="center">
+  <a href="#to-do">TO DO</a> •
   <a href="#installation">Installation</a> •
   <a href="#initialization">Initialization</a> •
   <a href="#api">API</a> •
@@ -20,6 +21,16 @@ Threads (threads.net) Go API wrapper
 </p>
 
 </div>
+
+
+## TO DO
+Here are the features that are planned to be implemented and their current status.
+
+|                            Feature                            |   Status    |
+|:-------------------------------------------------------------:|:-----------:|
+|   Writing API (creat, delete, like/unlike, follow/unfollow)   | In progress |
+
+
 
 ## Installation
 
@@ -35,7 +46,7 @@ import (
 )
 
 
-threads, err := threadsnet.NewThreads()
+threadsAPI, err := threads.NewThreads()
 if err != nil {
     fmt.Println("Error:", err)
 }
@@ -45,7 +56,7 @@ if err != nil {
 #### Get User ID by username
 Pass a user's username string as an argument.
 ```go
-id, err := threads.GetUserID("zuck")
+id, err := threadsAPI.GetUserID("zuck")
 ```
 <details>
   <summary>Open response example</summary>
@@ -58,7 +69,7 @@ id, err := threads.GetUserID("zuck")
 #### Get User by ID
 Pass a user's ID number as an argument.
 ```go
-user, err := threads.GetUser(314216)
+user, err := threadsAPI.GetUser(314216)
 ```
 <details>
   <summary>Open response example</summary>
@@ -109,7 +120,7 @@ user, err := threads.GetUser(314216)
 #### Get User's replies by user's ID
 Pass user's ID number as an argument.
 ```go
-replies, err := threads.GetUserReplies(314216)
+replies, err := threadsAPI.GetUserReplies(314216)
 ```
 <details>
   <summary>Open response example</summary>
@@ -338,7 +349,7 @@ replies, err := threads.GetUserReplies(314216)
 #### Get User's threads by user's ID
 Pass user's ID number as an argument.
 ```go
-threads, err := threads.GetUserThreads(314216)
+threads, err := threadsAPI.GetUserThreads(314216)
 ```
 <details>
   <summary>Open response example</summary>
@@ -424,7 +435,7 @@ threads, err := threads.GetUserThreads(314216)
 #### Get Post by ID
 Pass a post's ID number as an argument.
 ```go
-post, err := threads.GetPost(3141002295235099165)
+post, err := threadsAPI.GetPost(3141002295235099165)
 ```
 <details>
   <summary>Open response example</summary>
@@ -550,7 +561,7 @@ post, err := threads.GetPost(3141002295235099165)
 #### Get Post likers.
 Pass a post's ID number as an argument.
 ```go
-likers, err := threads.GetPostLikers(3141002295235099165)
+likers, err := threadsAPI.GetPostLikers(3141002295235099165)
 ```
 
 <details>
@@ -584,4 +595,4 @@ likers, err := threads.GetPostLikers(3141002295235099165)
 
 
 ## Run examples
-See [/examples](./examples) folder for a runnable example of every available API method.
+See [examples](./examples) folder for a runnable example of every available API method.
