@@ -28,7 +28,7 @@ Here are the features that are planned to be implemented and their current statu
 
 |                            Feature                            |   Status    |
 |:-------------------------------------------------------------:|:-----------:|
-|   Writing API (creat, delete, like/unlike, follow/unfollow)   | In progress |
+|   Writing API (creat, delete, like/unlike, follow/unfollow)   |             |
 
 
 
